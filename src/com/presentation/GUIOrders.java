@@ -2,8 +2,11 @@ package com.presentation;
 
 import com.dao.ClientDAO;
 import com.dao.ComandaDAO;
+import com.dao.ProdusDAO;
 import com.model.Client;
 import com.model.Comanda;
+import com.model.Produs;
+import sun.applet.Main;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -15,6 +18,8 @@ import java.util.ArrayList;
 public class GUIOrders {
     ArrayList<Comanda> comenzi = new ArrayList<>();
     ComandaDAO com1 = new ComandaDAO();
+    ProdusDAO prod1 = new ProdusDAO();
+    GUIProdus guiProdus=new GUIProdus();
 
     private JFrame frame = new JFrame("Order Management");
     private JPanel panel1 = new JPanel();
@@ -26,7 +31,7 @@ public class GUIOrders {
     private JLabel idClient = new JLabel("ID Client: ", JLabel.LEFT);
     private JLabel cantitate = new JLabel("Cantitate Produs: ", JLabel.LEFT);
     private JLabel facturaLabel = new JLabel("ID comanda pentru factura : ", JLabel.LEFT);
-    private JButton butonInserare = new JButton("Adaugare Comanda");
+    public JButton butonInserare = new JButton("Adaugare Comanda");
     private JButton facturaButton = new JButton("Generare Factura");
 
 
@@ -107,6 +112,11 @@ public class GUIOrders {
         butonInserare.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                prod1.addProdus();
+                for (Produs pr : prod1.listaProduse) {
+                    if(pr.getDenumire().equals(numeField.getText()))
+                        prod1.update(new Produs(pr.getId(),pr.getDenumire(),pr.getCantitate()-Integer.parseInt(cantitateField.getText()),pr.getPret()));
+                }
                 com1.insert(new Comanda(numeField.getText(), Integer.parseInt(idClientField.getText()), Integer.parseInt(cantitateField.getText())));
                 addToTable();
             }

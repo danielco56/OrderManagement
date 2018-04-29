@@ -5,6 +5,8 @@ import com.presentation.GUI;
 import com.presentation.GUIOrders;
 import com.presentation.GUIProdus;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,11 +16,20 @@ import java.util.ArrayList;
 public class Main {
 
 
+
     public static void main(String[] args) {
+
 
         GUI interfat = new GUI();
         GUIProdus interfataP=new GUIProdus();
         GUIOrders interfataO=new GUIOrders();
+
+        interfataO.butonInserare.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                interfataP.addToTable();
+            }
+        });
 
         interfat.addToTable();
         interfataP.addToTable();
@@ -29,25 +40,16 @@ public class Main {
                 interfat.afisareGUI();
                 interfat.adaugareComponente();
                 interfat.operatiiButoane();
-            }
-        });
-
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
                 interfataP.afisareGUI();
                 interfataP.adaugareComponente();
                 interfataP.operatiiButoane();
-            }
-        });
-
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
                 interfataO.afisareGUI();
                 interfataO.adaugareComponente();
                 interfataO.operatiiButoane();
             }
         });
+
+
     }
+
 }

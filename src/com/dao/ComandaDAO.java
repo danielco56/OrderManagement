@@ -48,7 +48,6 @@ public class ComandaDAO {
         Connection dbConnection = ConnectionDb.getConnection();
         PreparedStatement insertStatement = null;
         try {
-            calculTotal(comanda);
             insertStatement = dbConnection.prepareStatement(insertStatementString);
             insertStatement.setString(1, comanda.getNumeProdus());
             insertStatement.setInt(2, comanda.getIdClient());
@@ -70,7 +69,6 @@ public class ComandaDAO {
         ProdusDAO prod = new ProdusDAO();
         prod.addProdus();
         for (Produs pr : prod.listaProduse) {
-            System.out.println(pr.getDenumire());
             if (pr.getDenumire().equals(comanda.getNumeProdus()))
                 pret = pr.getPret();
         }
