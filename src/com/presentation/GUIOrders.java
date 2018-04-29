@@ -13,13 +13,19 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class GUIOrders {
-    ArrayList<Comanda> comenzi = new ArrayList<>();
-    ComandaDAO com1 = new ComandaDAO();
-    ProdusDAO prod1 = new ProdusDAO();
-    GUIProdus guiProdus=new GUIProdus();
+    private ArrayList<Comanda> comenzi = new ArrayList<>();
+    private ComandaDAO com1 = new ComandaDAO();
+    private ProdusDAO prod1 = new ProdusDAO();
+    private ClientDAO clie1 = new ClientDAO();
+    private GUIProdus guiProdus = new GUIProdus();
 
     private JFrame frame = new JFrame("Order Management");
     private JPanel panel1 = new JPanel();
@@ -114,12 +120,70 @@ public class GUIOrders {
             public void actionPerformed(ActionEvent e) {
                 prod1.addProdus();
                 for (Produs pr : prod1.listaProduse) {
-                    if(pr.getDenumire().equals(numeField.getText()))
-                        prod1.update(new Produs(pr.getId(),pr.getDenumire(),pr.getCantitate()-Integer.parseInt(cantitateField.getText()),pr.getPret()));
+                    if (pr.getDenumire().equals(numeField.getText()))
+                        prod1.update(new Produs(pr.getId(), pr.getDenumire(), pr.getCantitate() - Integer.parseInt(cantitateField.getText()), pr.getPret()));
                 }
                 com1.insert(new Comanda(numeField.getText(), Integer.parseInt(idClientField.getText()), Integer.parseInt(cantitateField.getText())));
                 addToTable();
             }
         });
+
+        facturaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ComandaDAO comTest = new ComandaDAO();
+                ClientDAO  clieTest= new ClientDAO();
+                ProdusDAO  proTest= new ProdusDAO();
+
+                proTest.addProdus();
+                clieTest.addClienti();
+                comTest.addComanda();
+
+                double total=0;
+                int cantitate=0;
+                double pret=0;
+                int idClient=0;
+                String numeClient="";
+                String numeProdus="";
+
+                for (Comanda com: comTest.listaComenzi) {
+                    if(com.getIdorder()==Integer.parseInt(facturaField.getText()))
+                        total=com.getTotal();
+                        cantitate=com.getCantitate();
+                        numeProdus=com.getNumeProdus();
+                        idClient=com.getIdClient();
+                }
+
+                for(Client cl: clieTest.listaClienti)
+                {
+                    if(cl.getIdClient()==idClient)
+                    {
+                        numeClient=cl.getNume();
+                    }
+                }
+
+
+                createInvoice(numeClient,numeProdus,total/cantitate,cantitate,total);
+
+            }
+        });
+    }
+
+    private void createInvoice(String numeClient,String numeProdus, double pret, int cantitate ,double total) {
+
+
+        try {
+            FileWriter writer = new FileWriter("Factura.txt");
+            writer.write("Comanda Nr: " + facturaField.getText()+"\n");
+            writer.write("Clientul: " + numeClient+"\n");
+            writer.write("Nume produs: " + numeProdus + "     " + cantitate + " X " + pret+"\n");
+            writer.write("________________________________________________________"+"\n");
+            writer.write("TOTAL: " + total+"\n");
+            writer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 }
