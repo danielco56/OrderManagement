@@ -1,5 +1,7 @@
 package com.dao;
 
+import com.business.Validare;
+import com.business.ValidareProdus;
 import com.connection.ConnectionDb;
 import com.model.Produs;
 
@@ -16,6 +18,7 @@ public class ProdusDAO {
     private final static String updateStatementString = "UPDATE schooldb.produs SET denumire=?,cantitate=? ,pret=? WHERE id=?;";
 
     public ArrayList<Produs> listaProduse = new ArrayList<Produs>();
+    private ValidareProdus val = new ValidareProdus();
 
     public ArrayList<Produs> addProdus() {
         Connection dbConnection = ConnectionDb.getConnection();
@@ -41,12 +44,22 @@ public class ProdusDAO {
 
     }
 
+    private ArrayList<Integer> getID() {
+
+        ArrayList<Integer> ids = new ArrayList<Integer>();
+        for (Produs pr : addProdus()) {
+            ids.add(pr.getId());
+        }
+        return ids;
+    }
+
     public void insert(Produs produs) {
         Connection dbConnection = ConnectionDb.getConnection();
         PreparedStatement insertStatement = null;
+        val.validareCampuri(produs, getID());
         try {
             insertStatement = dbConnection.prepareStatement(insertStatementString);
-            insertStatement.setInt(1,produs.getId());
+            insertStatement.setInt(1, produs.getId());
             insertStatement.setString(2, produs.getDenumire());
             insertStatement.setInt(3, produs.getCantitate());
             insertStatement.setDouble(4, produs.getPret());

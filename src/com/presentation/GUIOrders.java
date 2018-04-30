@@ -183,7 +183,7 @@ public class GUIOrders {
             writer.write(System.lineSeparator());
             writer.write("Nume produs: " + numeProdus + "     " + cantitate + " X " + pret + " ");
             writer.write(System.lineSeparator());
-            writer.write("________________________________________________________" + " ");
+            writer.write("_______________________________________" + " ");
             writer.write(System.lineSeparator());
             writer.write("TOTAL: " + total + " ");
             writer.flush();

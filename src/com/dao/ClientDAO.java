@@ -1,5 +1,6 @@
 package com.dao;
 
+import com.business.ValidareClient;
 import com.connection.ConnectionDb;
 import com.model.Client;
 
@@ -12,6 +13,7 @@ public class ClientDAO {
     private final static String deleteStatementString = "DELETE FROM `schooldb`.`client` WHERE id=?;";
     private final static String updateStatementString = "UPDATE schooldb.client SET nume=?,email=? ,telefon=? WHERE id=?;";
     public ArrayList<Client> listaClienti = new ArrayList<Client>();
+    private ValidareClient val = new ValidareClient();
 
     public ArrayList<Client> addClienti() {
 
@@ -37,9 +39,19 @@ public class ClientDAO {
         return listaClienti;
     }
 
+    private ArrayList<Integer> getID() {
+
+        ArrayList<Integer> ids = new ArrayList<Integer>();
+        for (Client cl : addClienti()) {
+            ids.add(cl.getIdClient());
+        }
+        return ids;
+    }
+
     public void insert(Client client) {
         Connection dbConnection = ConnectionDb.getConnection();
         PreparedStatement insertStatement = null;
+        val.validareCampuri(client, getID());
         try {
             insertStatement = dbConnection.prepareStatement(insertStatementString);
             insertStatement.setInt(1, client.getIdClient());
