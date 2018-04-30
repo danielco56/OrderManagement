@@ -1,0 +1,5 @@
+Comanda Nr: 2 
+Clientul: Mihai 
+Nume produs: cola     3 X 4.0 
+________________________________________________________ 
+TOTAL: 12.0 
