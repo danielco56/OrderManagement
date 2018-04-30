@@ -120,11 +120,16 @@ public class GUIOrders {
             public void actionPerformed(ActionEvent e) {
                 prod1.addProdus();
                 for (Produs pr : prod1.listaProduse) {
-                    if (pr.getDenumire().equals(numeField.getText()))
+                    if (pr.getDenumire().equals(numeField.getText()) && pr.getCantitate() >= Integer.parseInt(cantitateField.getText())) {
                         prod1.update(new Produs(pr.getId(), pr.getDenumire(), pr.getCantitate() - Integer.parseInt(cantitateField.getText()), pr.getPret()));
+                        com1.insert(new Comanda(numeField.getText(), Integer.parseInt(idClientField.getText()), Integer.parseInt(cantitateField.getText())));
+                        addToTable();
+                    } else if (pr.getDenumire().equals(numeField.getText()) && pr.getCantitate() < Integer.parseInt(cantitateField.getText())) {
+                        JOptionPane.showMessageDialog(frame, "Cantitatea este indisponibila!");
+
+                    }
+
                 }
-                com1.insert(new Comanda(numeField.getText(), Integer.parseInt(idClientField.getText()), Integer.parseInt(cantitateField.getText())));
-                addToTable();
             }
         });
 
@@ -132,53 +137,55 @@ public class GUIOrders {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ComandaDAO comTest = new ComandaDAO();
-                ClientDAO  clieTest= new ClientDAO();
-                ProdusDAO  proTest= new ProdusDAO();
+                ClientDAO clieTest = new ClientDAO();
+                ProdusDAO proTest = new ProdusDAO();
 
                 proTest.addProdus();
                 clieTest.addClienti();
                 comTest.addComanda();
 
-                double total=0;
-                int cantitate=0;
-                double pret=0;
-                int idClient=0;
-                String numeClient="";
-                String numeProdus="";
+                double total = 0;
+                int cantitate = 0;
+                double pret = 0;
+                int idClient = 0;
+                String numeClient = "";
+                String numeProdus = "";
 
-                for (Comanda com: comTest.listaComenzi) {
-                    if(com.getIdorder()==Integer.parseInt(facturaField.getText()))
-                        total=com.getTotal();
-                        cantitate=com.getCantitate();
-                        numeProdus=com.getNumeProdus();
-                        idClient=com.getIdClient();
+                for (Comanda com : comTest.listaComenzi) {
+                    if (com.getIdorder() == Integer.parseInt(facturaField.getText()))
+                        total = com.getTotal();
+                    cantitate = com.getCantitate();
+                    numeProdus = com.getNumeProdus();
+                    idClient = com.getIdClient();
                 }
 
-                for(Client cl: clieTest.listaClienti)
-                {
-                    if(cl.getIdClient()==idClient)
-                    {
-                        numeClient=cl.getNume();
+                for (Client cl : clieTest.listaClienti) {
+                    if (cl.getIdClient() == idClient) {
+                        numeClient = cl.getNume();
                     }
                 }
 
 
-                createInvoice(numeClient,numeProdus,total/cantitate,cantitate,total);
+                createInvoice(numeClient, numeProdus, total / cantitate, cantitate, total);
 
             }
         });
     }
 
-    private void createInvoice(String numeClient,String numeProdus, double pret, int cantitate ,double total) {
+    private void createInvoice(String numeClient, String numeProdus, double pret, int cantitate, double total) {
 
 
         try {
             FileWriter writer = new FileWriter("Factura.txt");
-            writer.write("Comanda Nr: " + facturaField.getText()+"\n");
-            writer.write("Clientul: " + numeClient+"\n");
-            writer.write("Nume produs: " + numeProdus + "     " + cantitate + " X " + pret+"\n");
-            writer.write("________________________________________________________"+"\n");
-            writer.write("TOTAL: " + total+"\n");
+            writer.write("Comanda Nr: " + facturaField.getText() + " ");
+            writer.write(System.lineSeparator());
+            writer.write("Clientul: " + numeClient + " ");
+            writer.write(System.lineSeparator());
+            writer.write("Nume produs: " + numeProdus + "     " + cantitate + " X " + pret + " ");
+            writer.write(System.lineSeparator());
+            writer.write("________________________________________________________" + " ");
+            writer.write(System.lineSeparator());
+            writer.write("TOTAL: " + total + " ");
             writer.flush();
         } catch (IOException e) {
             e.printStackTrace();
