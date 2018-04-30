@@ -106,29 +106,40 @@ public class GUIProdus {
 
     }
 
-    public void operatiiButoane()
-    {
+    public void operatiiButoane() {
         butonInserare.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                p1.insert(new Produs(Integer.parseInt(idField.getText()),numeField.getText(),Integer.parseInt(emailField.getText()),Double.parseDouble(telefonField.getText())));
-                addToTable();
+                if (idField.getText().equals("") || numeField.getText().equals("") || emailField.getText().equals("") || telefonField.getText().equals(""))
+                    JOptionPane.showMessageDialog(null, "Toate campurile trebuie sa fie completate!", "InfoBox: " + "Warning", JOptionPane.INFORMATION_MESSAGE);
+                else {
+                    p1.insert(new Produs(Integer.parseInt(idField.getText()), numeField.getText(), Integer.parseInt(emailField.getText()), Double.parseDouble(telefonField.getText())));
+                    addToTable();
+                }
             }
         });
 
         butonStergere.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                p1.delete(new Produs(Integer.parseInt(idField.getText()),numeField.getText(),Integer.parseInt(emailField.getText()),Double.parseDouble(telefonField.getText())));
-                addToTable();
+                if (idField.getText().equals("") || numeField.getText().equals("") || emailField.getText().equals("") || telefonField.getText().equals(""))
+                    JOptionPane.showMessageDialog(null, "Toate campurile trebuie sa fie completate!", "InfoBox: " + "Warning", JOptionPane.INFORMATION_MESSAGE);
+                else {
+                    p1.delete(new Produs(Integer.parseInt(idField.getText()), numeField.getText(), Integer.parseInt(emailField.getText()), Double.parseDouble(telefonField.getText())));
+                    addToTable();
+                }
             }
         });
 
         butonUpdate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                p1.update(new Produs(Integer.parseInt(idField.getText()),numeField.getText(),Integer.parseInt(emailField.getText()),Double.parseDouble(telefonField.getText())));
-                addToTable();
+                if (idField.getText().equals("") || numeField.getText().equals("") || emailField.getText().equals("") || telefonField.getText().equals(""))
+                    JOptionPane.showMessageDialog(null, "Toate campurile trebuie sa fie completate!", "InfoBox: " + "Warning", JOptionPane.INFORMATION_MESSAGE);
+                else {
+                    p1.update(new Produs(Integer.parseInt(idField.getText()), numeField.getText(), Integer.parseInt(emailField.getText()), Double.parseDouble(telefonField.getText())));
+                    addToTable();
+                }
             }
         });
     }

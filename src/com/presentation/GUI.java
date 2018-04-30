@@ -61,7 +61,6 @@ public class GUI {
     public void adaugareComponente() {
 
 
-
         idField.setSize(100, 40);
         emailField.setSize(100, 40);
         numeField.setSize(100, 40);
@@ -98,7 +97,6 @@ public class GUI {
         model.addColumn("Telefon");
 
 
-
         for (int i = 0; i < clienti.size(); i++) {
             date[0] = clienti.get(i).getIdClient();
             date[1] = clienti.get(i).getNume();
@@ -114,24 +112,36 @@ public class GUI {
         butonInserare.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                c1.insert(new Client(Integer.parseInt(idField.getText()), numeField.getText(), emailField.getText(), telefonField.getText()));
-                  addToTable();
+                if (idField.getText().equals("") || numeField.getText().equals("") || emailField.getText().equals("") || telefonField.getText().equals(""))
+                    JOptionPane.showMessageDialog(null, "Toate campurile trebuie sa fie completate!", "InfoBox: " + "Warning", JOptionPane.INFORMATION_MESSAGE);
+                else {
+                    c1.insert(new Client(Integer.parseInt(idField.getText()), numeField.getText(), emailField.getText(), telefonField.getText()));
+                    addToTable();
+                }
             }
         });
 
         butonStergere.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                c1.delete(new Client(Integer.parseInt(idField.getText()), numeField.getText(), emailField.getText(), telefonField.getText()));
-                addToTable();
+                if (idField.getText().equals("") || numeField.getText().equals("") || emailField.getText().equals("") || telefonField.getText().equals(""))
+                    JOptionPane.showMessageDialog(null, "Toate campurile trebuie sa fie completate!", "InfoBox: " + "Warning", JOptionPane.INFORMATION_MESSAGE);
+                else {
+                    c1.delete(new Client(Integer.parseInt(idField.getText()), numeField.getText(), emailField.getText(), telefonField.getText()));
+                    addToTable();
+                }
             }
         });
 
         butonUpdate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                c1.update(new Client(Integer.parseInt(idField.getText()), numeField.getText(), emailField.getText(), telefonField.getText()));
-                addToTable();
+                if (idField.getText().equals("") || numeField.getText().equals("") || emailField.getText().equals("") || telefonField.getText().equals(""))
+                    JOptionPane.showMessageDialog(null, "Toate campurile trebuie sa fie completate!", "InfoBox: " + "Warning", JOptionPane.INFORMATION_MESSAGE);
+                else {
+                    c1.update(new Client(Integer.parseInt(idField.getText()), numeField.getText(), emailField.getText(), telefonField.getText()));
+                    addToTable();
+                }
             }
         });
     }
