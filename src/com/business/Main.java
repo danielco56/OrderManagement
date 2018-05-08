@@ -2,6 +2,8 @@ package com.business;
 
 import com.connection.ConnectionDb;
 import com.dao.ClientDAO;
+import com.dao.ComandaDAO;
+import com.dao.ProdusDAO;
 import com.model.Client;
 import com.presentation.GUI;
 import com.presentation.GUIOrders;
@@ -23,19 +25,22 @@ public class Main {
 
 
         GUI interfat = new GUI();
+        ClientDAO cl=new ClientDAO();
+        ComandaDAO com1=new ComandaDAO();
+        ProdusDAO p1=new ProdusDAO();
         GUIProdus interfataP=new GUIProdus();
         GUIOrders interfataO=new GUIOrders();
 
         interfataO.butonInserare.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                interfataP.addToTable();
+                interfataP.addToTable(p1.addProdus());
             }
         });
 
-        interfat.addToTable();
-        interfataP.addToTable();
-        interfataO.addToTable();
+        interfat.addToTable(cl.addClienti());
+        interfataP.addToTable(p1.addProdus());
+        interfataO.addToTable(com1.addComanda());
 
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {

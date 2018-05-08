@@ -8,6 +8,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 public class GUIProdus {
@@ -83,25 +84,40 @@ public class GUIProdus {
 
     }
 
-    public void addToTable() {
-        produse = p1.addProdus();
-        Object[] date = new Object[4];
-
+    public void addToTable(ArrayList<Object> lista) {
+        int i = 0,j=0;
         model.setRowCount(0);
         model.setColumnCount(0);
 
-        model.addColumn("ID");
-        model.addColumn("Denumire");
-        model.addColumn("Cantitate");
-        model.addColumn("Pret");
+        for (Field field : lista.get(0).getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            try {
+                j++;
+                model.addColumn(field.getName());
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            }
+        }
+        Object[] date = new Object[j];
+        for (Object object : lista) {
+            for (Field field : object.getClass().getDeclaredFields()) {
+                field.setAccessible(true);
+                Object value;
+                try {
 
-
-        for (int i = 0; i < produse.size(); i++) {
-            date[0] = produse.get(i).getId();
-            date[1] = produse.get(i).getDenumire();
-            date[2] = produse.get(i).getCantitate();
-            date[3] = produse.get(i).getPret();
-            model.addRow(date);
+                    value = field.get(object);
+                    date[i] = value;
+                    i++;
+                    if (i == j) {
+                        i = 0;
+                        model.addRow(date);
+                    }
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
     }
@@ -114,7 +130,7 @@ public class GUIProdus {
                     JOptionPane.showMessageDialog(null, "Toate campurile trebuie sa fie completate!", "InfoBox: " + "Warning", JOptionPane.INFORMATION_MESSAGE);
                 else {
                     p1.insert(new Produs(Integer.parseInt(idField.getText()), numeField.getText(), Integer.parseInt(emailField.getText()), Double.parseDouble(telefonField.getText())));
-                    addToTable();
+                    addToTable(p1.addProdus());
                 }
             }
         });
@@ -126,7 +142,7 @@ public class GUIProdus {
                     JOptionPane.showMessageDialog(null, "Toate campurile trebuie sa fie completate!", "InfoBox: " + "Warning", JOptionPane.INFORMATION_MESSAGE);
                 else {
                     p1.delete(new Produs(Integer.parseInt(idField.getText()), numeField.getText(), Integer.parseInt(emailField.getText()), Double.parseDouble(telefonField.getText())));
-                    addToTable();
+                    addToTable(p1.addProdus());
                 }
             }
         });
@@ -138,7 +154,7 @@ public class GUIProdus {
                     JOptionPane.showMessageDialog(null, "Toate campurile trebuie sa fie completate!", "InfoBox: " + "Warning", JOptionPane.INFORMATION_MESSAGE);
                 else {
                     p1.update(new Produs(Integer.parseInt(idField.getText()), numeField.getText(), Integer.parseInt(emailField.getText()), Double.parseDouble(telefonField.getText())));
-                    addToTable();
+                    addToTable(p1.addProdus());
                 }
             }
         });

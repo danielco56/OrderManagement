@@ -12,7 +12,6 @@ public class ValidareClient implements Validare{
         for (int i = 0; i < ids.size(); i++) {
             if (ids.get(i) == ((Client) client).getIdClient() || ((Client) client).getIdClient()<=0) {
                 JOptionPane.showMessageDialog(null, "ID Incorect!", "InfoBox: " + "Warning", JOptionPane.INFORMATION_MESSAGE);
-                throw new IllegalArgumentException("ID incorect!");
             }
         }
     }

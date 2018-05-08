@@ -1,5 +1,5 @@
-Comanda Nr: 3 
-Clientul: Mihai 
-Nume produs: cola     3 X 4.0 
+Comanda Nr: 5 
+Clientul: Daniel 
+Nume produs: Pepsi     4 X 4.0 
 _______________________________________ 
-TOTAL: 12.0 
+TOTAL: 16.0 

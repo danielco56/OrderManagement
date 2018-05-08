@@ -14,6 +14,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.lang.reflect.Field;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -87,28 +88,42 @@ public class GUIOrders {
         panel2.add(new JScrollPane(table));
 
     }
+    public void addToTable(ArrayList<Object> lista) {
 
-    public void addToTable() {
-        comenzi = com1.addComanda();
-        Object[] date = new Object[5];
 
+        int i = 0,j=0;
         model.setRowCount(0);
         model.setColumnCount(0);
 
-        model.addColumn("ID Comanda");
-        model.addColumn("Nume Produs");
-        model.addColumn("ID Client");
-        model.addColumn("Cantitate");
-        model.addColumn("Total");
+        for (Field field : lista.get(0).getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            try {
+                j++;
+                model.addColumn(field.getName());
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            }
+        }
+        Object[] date = new Object[j];
+        for (Object object : lista) {
+            for (Field field : object.getClass().getDeclaredFields()) {
+                field.setAccessible(true);
+                Object value;
+                try {
 
-
-        for (int i = 0; i < comenzi.size(); i++) {
-            date[0] = comenzi.get(i).getIdorder();
-            date[1] = comenzi.get(i).getNumeProdus();
-            date[2] = comenzi.get(i).getIdClient();
-            date[3] = comenzi.get(i).getCantitate();
-            date[4] = comenzi.get(i).getTotal();
-            model.addRow(date);
+                    value = field.get(object);
+                    date[i] = value;
+                    i++;
+                    if (i == j) {
+                        i = 0;
+                        model.addRow(date);
+                    }
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
     }
@@ -119,12 +134,12 @@ public class GUIOrders {
             @Override
             public void actionPerformed(ActionEvent e) {
                 prod1.addProdus();
-                for (Produs pr : prod1.listaProduse) {
-                    if (pr.getDenumire().equals(numeField.getText()) && pr.getCantitate() >= Integer.parseInt(cantitateField.getText())) {
-                        prod1.update(new Produs(pr.getId(), pr.getDenumire(), pr.getCantitate() - Integer.parseInt(cantitateField.getText()), pr.getPret()));
+                for (Object pr : prod1.listaProduse) {
+                    if (((Produs)pr).getDenumire().equals(numeField.getText()) && ((Produs)pr).getCantitate() >= Integer.parseInt(cantitateField.getText())) {
+                        prod1.update(new Produs(((Produs)pr).getId(), ((Produs)pr).getDenumire(), ((Produs)pr).getCantitate() - Integer.parseInt(cantitateField.getText()), ((Produs)pr).getPret()));
                         com1.insert(new Comanda(numeField.getText(), Integer.parseInt(idClientField.getText()), Integer.parseInt(cantitateField.getText())));
-                        addToTable();
-                    } else if (pr.getDenumire().equals(numeField.getText()) && pr.getCantitate() < Integer.parseInt(cantitateField.getText())) {
+                        addToTable(com1.addComanda());
+                    } else if (((Produs)pr).getDenumire().equals(numeField.getText()) && ((Produs)pr).getCantitate() < Integer.parseInt(cantitateField.getText())) {
                         JOptionPane.showMessageDialog(frame, "Cantitatea este indisponibila!");
 
                     }
@@ -151,17 +166,17 @@ public class GUIOrders {
                 String numeClient = "";
                 String numeProdus = "";
 
-                for (Comanda com : comTest.listaComenzi) {
-                    if (com.getIdorder() == Integer.parseInt(facturaField.getText()))
-                        total = com.getTotal();
-                    cantitate = com.getCantitate();
-                    numeProdus = com.getNumeProdus();
-                    idClient = com.getIdClient();
+                for (Object com : comTest.listaComenzi) {
+                    if (((Comanda) com).getIdorder() == Integer.parseInt(facturaField.getText()))
+                        total = ((Comanda) com).getTotal();
+                    cantitate = ((Comanda) com).getCantitate();
+                    numeProdus = ((Comanda) com).getNumeProdus();
+                    idClient = ((Comanda) com).getIdClient();
                 }
 
-                for (Client cl : clieTest.listaClienti) {
-                    if (cl.getIdClient() == idClient) {
-                        numeClient = cl.getNume();
+                for (Object cl : clieTest.listaClienti) {
+                    if (((Client) cl).getIdClient() == idClient) {
+                        numeClient = ((Client) cl).getNume();
                     }
                 }
 

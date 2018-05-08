@@ -9,10 +9,14 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Vector;
 
 public class GUI {
     ArrayList<Client> clienti = new ArrayList<>();
+
     ClientDAO c1 = new ClientDAO();
     Object[] coloane = {"ID", "Name", "Email", "Telefon"};
 
@@ -84,25 +88,41 @@ public class GUI {
 
     }
 
-    public void addToTable() {
-        clienti = c1.addClienti();
-        Object[] date = new Object[4];
+    public void addToTable(ArrayList<Object> lista) {
 
+        int i = 0, j = 0;
         model.setRowCount(0);
         model.setColumnCount(0);
 
-        model.addColumn("ID");
-        model.addColumn("Name");
-        model.addColumn("Email");
-        model.addColumn("Telefon");
+        for (Field field : lista.get(0).getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            try {
+                j++;
+                model.addColumn(field.getName());
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            }
+        }
+        Object[] date = new Object[j];
+        for (Object object : lista) {
+            for (Field field : object.getClass().getDeclaredFields()) {
+                field.setAccessible(true);
+                Object value;
+                try {
 
-
-        for (int i = 0; i < clienti.size(); i++) {
-            date[0] = clienti.get(i).getIdClient();
-            date[1] = clienti.get(i).getNume();
-            date[2] = clienti.get(i).getEmail();
-            date[3] = clienti.get(i).getTelefon();
-            model.addRow(date);
+                    value = field.get(object);
+                    date[i] = value;
+                    i++;
+                    if (i == j) {
+                        i = 0;
+                        model.addRow(date);
+                    }
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
     }
@@ -116,7 +136,7 @@ public class GUI {
                     JOptionPane.showMessageDialog(null, "Toate campurile trebuie sa fie completate!", "InfoBox: " + "Warning", JOptionPane.INFORMATION_MESSAGE);
                 else {
                     c1.insert(new Client(Integer.parseInt(idField.getText()), numeField.getText(), emailField.getText(), telefonField.getText()));
-                    addToTable();
+                    addToTable(c1.addClienti());
                 }
             }
         });
@@ -128,7 +148,7 @@ public class GUI {
                     JOptionPane.showMessageDialog(null, "Toate campurile trebuie sa fie completate!", "InfoBox: " + "Warning", JOptionPane.INFORMATION_MESSAGE);
                 else {
                     c1.delete(new Client(Integer.parseInt(idField.getText()), numeField.getText(), emailField.getText(), telefonField.getText()));
-                    addToTable();
+                    addToTable(c1.addClienti());
                 }
             }
         });
@@ -140,7 +160,7 @@ public class GUI {
                     JOptionPane.showMessageDialog(null, "Toate campurile trebuie sa fie completate!", "InfoBox: " + "Warning", JOptionPane.INFORMATION_MESSAGE);
                 else {
                     c1.update(new Client(Integer.parseInt(idField.getText()), numeField.getText(), emailField.getText(), telefonField.getText()));
-                    addToTable();
+                    addToTable(c1.addClienti());
                 }
             }
         });

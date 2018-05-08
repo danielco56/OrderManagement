@@ -18,9 +18,9 @@ public class ComandaDAO {
     private final static String findStatementString = "SELECT * FROM schooldb.comanda;";
     private final static String insertStatementString = "INSERT INTO `schooldb`.`comanda` (`numeProdus`, `idClient`, `cantitate`,`total`) VALUES (?, ?, ?, ?);";
 
-    public ArrayList<Comanda> listaComenzi = new ArrayList<Comanda>();
+    public ArrayList<Object> listaComenzi = new ArrayList<Object>();
 
-    public ArrayList<Comanda> addComanda() {
+    public ArrayList<Object> addComanda() {
         Connection dbConnection = ConnectionDb.getConnection();
         PreparedStatement findStatement = null;
         ResultSet res = null;
@@ -68,9 +68,9 @@ public class ComandaDAO {
         double pret = 0;
         ProdusDAO prod = new ProdusDAO();
         prod.addProdus();
-        for (Produs pr : prod.listaProduse) {
-            if (pr.getDenumire().equals(comanda.getNumeProdus()))
-                pret = pr.getPret();
+        for (Object pr : prod.listaProduse) {
+            if (((Produs)pr).getDenumire().equals(comanda.getNumeProdus()))
+                pret = ((Produs)pr).getPret();
         }
         total = comanda.getCantitate() * pret;
 

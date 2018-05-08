@@ -12,10 +12,10 @@ public class ClientDAO {
     private final static String insertStatementString = "INSERT INTO `schooldb`.`client` (`id`, `nume`, `email`, `telefon`) VALUES (?, ?, ?, ?);\n";
     private final static String deleteStatementString = "DELETE FROM `schooldb`.`client` WHERE id=?;";
     private final static String updateStatementString = "UPDATE schooldb.client SET nume=?,email=? ,telefon=? WHERE id=?;";
-    public ArrayList<Client> listaClienti = new ArrayList<Client>();
+    public ArrayList<Object> listaClienti = new ArrayList<Object>();
     private ValidareClient val = new ValidareClient();
 
-    public ArrayList<Client> addClienti() {
+    public ArrayList<Object> addClienti() {
 
         Connection dbConnection = ConnectionDb.getConnection();
         PreparedStatement findStatement = null;
@@ -42,8 +42,8 @@ public class ClientDAO {
     private ArrayList<Integer> getID() {
 
         ArrayList<Integer> ids = new ArrayList<Integer>();
-        for (Client cl : addClienti()) {
-            ids.add(cl.getIdClient());
+        for (Object cl : addClienti()) {
+            ids.add(((Client)cl).getIdClient());
         }
         return ids;
     }
@@ -97,11 +97,11 @@ public class ClientDAO {
             updateStatement.setString(3, client.getTelefon());
             updateStatement.executeUpdate();
             System.out.println("UPDATED");
-            for (Client cl : listaClienti) {
-                if (cl.getIdClient() == client.getIdClient()) {
-                    cl.setEmail(client.getEmail());
-                    cl.setNume(client.getNume());
-                    cl.setTelefon(client.getTelefon());
+            for ( Object cl : listaClienti) {
+                if (((Client)cl).getIdClient() == client.getIdClient()) {
+                    ((Client)cl).setEmail(client.getEmail());
+                    ((Client)cl).setNume(client.getNume());
+                    ((Client)cl).setTelefon(client.getTelefon());
                 }
 
             }

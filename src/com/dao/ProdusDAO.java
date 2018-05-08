@@ -17,10 +17,10 @@ public class ProdusDAO {
     private final static String deleteStatementString = "DELETE FROM `schooldb`.`produs` WHERE id=?;";
     private final static String updateStatementString = "UPDATE schooldb.produs SET denumire=?,cantitate=? ,pret=? WHERE id=?;";
 
-    public ArrayList<Produs> listaProduse = new ArrayList<Produs>();
+    public ArrayList<Object> listaProduse = new ArrayList<Object>();
     private ValidareProdus val = new ValidareProdus();
 
-    public ArrayList<Produs> addProdus() {
+    public ArrayList<Object> addProdus() {
         Connection dbConnection = ConnectionDb.getConnection();
         PreparedStatement findStatement = null;
         ResultSet res = null;
@@ -47,8 +47,8 @@ public class ProdusDAO {
     private ArrayList<Integer> getID() {
 
         ArrayList<Integer> ids = new ArrayList<Integer>();
-        for (Produs pr : addProdus()) {
-            ids.add(pr.getId());
+        for (Object pr : addProdus()) {
+            ids.add(((Produs)pr).getId());
         }
         return ids;
     }
@@ -102,11 +102,11 @@ public class ProdusDAO {
             updateStatement.setDouble(3, produs.getPret());
             updateStatement.setInt(4, produs.getId());
             updateStatement.executeUpdate();
-            for (Produs pr : listaProduse) {
-                if (pr.getId() == produs.getId()) {
-                    pr.setDenumire(produs.getDenumire());
-                    pr.setCantitate(produs.getCantitate());
-                    pr.setPret(produs.getPret());
+            for (Object pr : listaProduse) {
+                if (((Produs)pr).getId() == produs.getId()) {
+                    ((Produs)pr).setDenumire(produs.getDenumire());
+                    ((Produs)pr).setCantitate(produs.getCantitate());
+                    ((Produs)pr).setPret(produs.getPret());
                 }
             }
         } catch (SQLException e) {
